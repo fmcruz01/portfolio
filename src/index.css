@@ -37,7 +37,7 @@
   --color: rgba(0, 0, 0, 0.87);
   background-color: #ffffff;
 
-  --transition-duration: 0.6s;
+  --transition-duration: 1.5s;
   --transition-timing: cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
@@ -60,7 +60,7 @@ body {
 
 .page-container {
   position: relative;
-  min-height: 200vh;
+  min-height: 400vh;
 }
 
 .grid-container {
@@ -105,7 +105,7 @@ body {
   border: none;
   cursor: pointer;
   font-family: var(--font-inter);
-  font-size: 18px;
+  font-size: 16px;
   color: var(--color);
 }
 
@@ -162,6 +162,16 @@ body {
 
 .image-carousel.slide-up {
   transform: translateY(0);
+  z-index: 5;
+}
+
+.image-carousel.slide-up.slide-1 {
+  transform: translateY(-100vh);
+  z-index: 5;
+}
+
+.image-carousel.slide-up.slide-2 {
+  transform: translateY(-200vh);
   z-index: 5;
 }
 

@@ -5,6 +5,7 @@ import arrowIcon from './assets/arrow.svg';
 import heroImage from './assets/gradient.svg';
 import sphere from './assets/sphere.svg';
 import './App.css';
+import { get } from 'http';
 
 interface CarrouselImage {
   id: number;
@@ -34,15 +35,42 @@ const CAROUSSEL_IMAGES: CarrouselImage[] = [
   }
 ];
 
-const NAV_ITEMS = ['Home', 'About'] as const;
-const SCROLL_THRESHOLD = 10;
+const getScrollThreshold = () => {
+  if (typeof window === 'undefined'){
+    console.log('Window is undefined, returning default threshold of 500');
+    return 500;
+  }
+  const size = Math.floor(window.innerHeight);
+  console.log('Threshold set to:', size);
+  return size;
+}
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [scrollThreshold, setScrollThreshold] = useState(getScrollThreshold());
   
   useEffect(() => {
+    const handleResize = () => {
+      setScrollThreshold(getScrollThreshold()); // 10% of viewport height
+    };
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > SCROLL_THRESHOLD);
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 10);
+
+      if(scrollPosition > scrollThreshold) {
+        const scrollAfterThreshold = scrollPosition - scrollThreshold;
+        const newIndex = Math.min(Math.floor(scrollAfterThreshold / scrollThreshold), CAROUSSEL_IMAGES.length - 1);
+        setActiveIndex(newIndex);
+      } else {
+        setActiveIndex(-1);
+      }
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -50,6 +78,11 @@ function App() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  const getCarouselClass = () => {
+    if(!isScrolled) return '';
+    return `slide-up slide-${activeIndex}`
+  }
 
   return (
     <div className='page-container'>
@@ -67,7 +100,7 @@ function App() {
         <div className={`hero-image ${isScrolled ? 'scrolled' : ''}`}>
           <img src={heroImage} alt="hero" />
         </div>
-        <div className={`image-carousel ${isScrolled ? 'slide-up' : ''}`}>
+        <div className={`image-carousel ${getCarouselClass()}`}>
           {CAROUSSEL_IMAGES.map((image, index) => (
             <div key={image.id} className="carousel-item">
               <img src={image.src} alt={image.alt} />
