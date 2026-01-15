@@ -3,23 +3,241 @@
 /* Inter variable font (matches localFont config) */
 @font-face {
   font-family: 'InterVar';
-  src: url('../fonts/Inter-VariableFont_slnt,wght.ttf') format('truetype');
+  src: url('./fonts/Inter-VariableFont_slnt,wght.ttf') format('truetype');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: 'Grutesque';
+  src: url('./fonts/BricolageGrotesque-VariableFont_opsz\,wdth\,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --font-inter: 'InterVar';
+  --font-grutesque: 'Grutesque';
+
+  --column-width: 333.33px;
+  --gap: 24px;
+  --columns: 5;
+  --grid-width: calc((var(--column-width) * var(--columns)) + (var(--gap) * (var(--columns) - 1)));
+
+  --carousel-columns: 4;
+  --carousel-width: calc((var(--column-width) * var(--carousel-columns)) + (var(--gap) * (var(--carousel-columns) - 1)));
+  --carousel-left: calc(50% - var(--grid-width) / 2 + 1 * var(--column-width) + 1 * var(--gap));
+
+  --spacing-bottom: 64px;
+  --spacing-top: 80px;
+
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  --color: rgba(0, 0, 0, 0.87);
   background-color: #ffffff;
-  height: 200vh;
+
+  --transition-duration: 0.6s;
+  --transition-timing: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
+  overflow-x: hidden;
+}
+
+.page-container {
+  position: relative;
+  min-height: 200vh;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), var(--column-width));
+  grid-template-rows: repeat(var(--columns), var(--column-width));
+  gap: var(--gap);
   min-height: 100vh;
+  width: var(--grid-width);
+  margin: 0 auto;
+  position: relative;
+}
+
+.navbar {
+  grid-column: 1 ;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-between;
+  z-index: 100;
+  position: fixed;
+  top: var(--spacing-top);
+  left: calc(50% - var(--grid-width) / 2);
+  width: var(--column-width);
+  height: 140px;
+}
+
+.navbar div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: start;
+}
+
+.contact {
+  text-decoration: underline;
+}
+.navbar button {
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-inter);
+  font-size: 18px;
+  color: var(--color);
+}
+
+.hero-image {
+  position: fixed;
+  top: 0;
+  left: var(--carousel-left);
+  width: calc(50% + var(--grid-width) / 2 - var(--column-width) - var(--gap));
+  height: 100vh;
+  z-index: 2;
+  overflow: hidden;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path var(--transition-duration) var(--transition-timing);
+  will-change: clip-path, transform;
+}
+
+.hero-image img {
+  width: 100%;
+}
+
+.hero-image.scrolled {
+  --clip-width: calc(4 * var(--column-width) + 3 * var(--gap));
+  clip-path: inset(0 calc(100% - var(--clip-width)) 100% 0);
+}
+
+.image-carousel {
+  position: fixed;
+  top: 0;
+  left: var(--carousel-left);
+  width: var(--carousel-width);
+  height: 100vh;
+  z-index: 1;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0s, visibility 0s;
+}
+
+.image-carousel.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.carousel-item {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(100vh);
+  transition: transform var(--transition-duration) var(--transition-timing);
+  will-change: transform;
+}
+
+.carousel-item img {
+  width: 1403px;
+}
+
+.carousel-item.slide-up {
+  transform: translateY(0);
+}
+
+.carousel-item-description {
+  line-height: 1.5;
+  font-family: var(--font-inter);
+}
+
+.titles {
+  grid-column: 1 / 4;
+  position: fixed;
+  bottom: var(--spacing-bottom);
+  left: calc(50% - var(--grid-width) / 2);
+  font-size: 64px;
+  font-family: var(--font-grutesque);
+  margin: 0;
+  z-index: 10;
+  color: var(--color);
+}
+
+.titles-div {
+  grid: 1 / 2;
+  display: flex;
+  flex-direction: column;
+  height: 64px;
+  overflow: hidden;
+}
+
+.title-span {
+  display: block;
+  line-height: 1;
+  height: 64px;
+  transform: translateY(0%);
+  transition: transform var(--transition-duration) var(--transition-timing);
+  will-change: transform;
+}
+
+.title-span.scrolled {
+  transform: translateY(-100%);
+}
+
+.hero-text {
+  grid-column: 4 / 7;
+  position: fixed;
+  bottom: var(--spacing-bottom);
+  left: var(--carousel-left);
+  width: 422px;
+  font-size: 18px;
+  font-family: var(--font-inter);
+  margin: 0;
+  z-index: 10;
+  opacity: 1;
+  color: var(--color);
+  transition: opacity var(--transition-duration) var(--transition-timing);
+  will-change: opacity;
+}
+
+.hero-text.scrolled {
+  opacity: 0;
+}
+
+.bottom-icon {
+  position: fixed;
+  bottom: var(--spacing-bottom);
+  right: calc(50% - var(--grid-width)/2);
+  width: 32px;
+  height: 32px;
+  z-index: 10;
+}
+
+.down-arrow {
+  width: 100%;
+  height: 100%;
+  animation: bounce 2s infinite;
 }
