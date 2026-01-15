@@ -1,0 +1,10 @@
+/* Minimal App styles; layout handled with Tailwind classes in JSX */
+html, body, #root {
+	height: 100%;
+	width: 100%;
+	position: relative;
+}
+
+/* Keep App-specific overrides minimal so Tailwind utilities control layout */
+
+
