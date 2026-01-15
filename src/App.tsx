@@ -31,18 +31,6 @@ const CAROUSSEL_IMAGES: CarrouselImage[] = [
     alt: 'Image 2',
     description: 'Description for Image 2',
     src: sphere,
-  },
-  {
-    id: 4,
-    alt: 'Image 2',
-    description: 'Description for Image 2',
-    src: sphere,
-  },
-  {
-    id: 5,
-    alt: 'Image 2',
-    description: 'Description for Image 2',
-    src: sphere,
   }
 ];
 
@@ -79,9 +67,9 @@ function App() {
         <div className={`hero-image ${isScrolled ? 'scrolled' : ''}`}>
           <img src={heroImage} alt="hero" />
         </div>
-        <div className={`image-carousel ${isScrolled ? 'visible' : ''}`}>
+        <div className={`image-carousel ${isScrolled ? 'slide-up' : ''}`}>
           {CAROUSSEL_IMAGES.map((image, index) => (
-            <div key={image.id} className={`carousel-item ${index === 0 && isScrolled ? 'slide-up' : ''}`}>
+            <div key={image.id} className="carousel-item">
               <img src={image.src} alt={image.alt} />
               <p className='carousel-item-description'>{image.description}</p>
             </div>
@@ -97,7 +85,7 @@ function App() {
             <span className={`title-span ${isScrolled ? 'scrolled' : ''}`}>work</span>
           </div>
         </div>
-        <p className={`hero-text ${isScrolled ? 'scrolled' : ''}`}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus veniam maiores voluptate dolorum harum? Nam hic ipsam blanditiis impedit doloremque sed, quis earum, ab suscipit quae, minus nemo numquam cumque.</p>
+        <p className="hero-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus veniam maiores voluptate dolorum harum? Nam hic ipsam blanditiis impedit doloremque sed, quis earum, ab suscipit quae, minus nemo numquam cumque.</p>
         <div className="bottom-icon">
           <img src={arrowIcon} alt="down-arrow" />
         </div>

@@ -115,7 +115,7 @@ body {
   left: var(--carousel-left);
   width: calc(50% + var(--grid-width) / 2 - var(--column-width) - var(--gap));
   height: 100vh;
-  z-index: 2;
+  z-index: 3;
   overflow: hidden;
   clip-path: inset(0 0 0 0);
   transition: clip-path var(--transition-duration) var(--transition-timing);
@@ -136,17 +136,14 @@ body {
   top: 0;
   left: var(--carousel-left);
   width: var(--carousel-width);
-  height: 100vh;
-  z-index: 1;
+  height: 300vh;
+  z-index: 4;
   overflow: hidden;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0s, visibility 0s;
-}
-
-.image-carousel.visible {
   opacity: 1;
-  visibility: visible;
+  background-color: white;
+  transform: translateY(100vh);
+  transition: transform var(--transition-duration) var(--transition-timing);
+  will-change: transform;
 }
 
 .carousel-item {
@@ -155,23 +152,23 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  transform: translateY(100vh);
-  transition: transform var(--transition-duration) var(--transition-timing);
-  will-change: transform;
+  padding-top: var(--spacing-top);
 }
 
 .carousel-item img {
   width: 1403px;
+  z-index: 5;
 }
 
-.carousel-item.slide-up {
+.image-carousel.slide-up {
   transform: translateY(0);
+  z-index: 5;
 }
 
 .carousel-item-description {
   line-height: 1.5;
   font-family: var(--font-inter);
+  z-index: 4;
 }
 
 .titles {
@@ -216,15 +213,11 @@ body {
   font-size: 18px;
   font-family: var(--font-inter);
   margin: 0;
-  z-index: 10;
+  z-index: 4;
   opacity: 1;
   color: var(--color);
-  transition: opacity var(--transition-duration) var(--transition-timing);
-  will-change: opacity;
-}
-
-.hero-text.scrolled {
-  opacity: 0;
+  /* transition: opacity var(--transition-duration) var(--transition-timing);
+  will-change: opacity; */
 }
 
 .bottom-icon {
