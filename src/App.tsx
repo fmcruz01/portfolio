@@ -17,7 +17,7 @@ interface CarrouselImage {
 const CAROUSSEL_IMAGES: CarrouselImage[] = [
   {
     id: 1,
-    alt: 'Image 1',
+    alt: 'Sphere',
     description: 'Description for Image 1',
     src: sphere,
   },
@@ -37,36 +37,44 @@ const CAROUSSEL_IMAGES: CarrouselImage[] = [
 
 const getScrollThreshold = () => {
   if (typeof window === 'undefined'){
-    console.log('Window is undefined, returning default threshold of 500');
     return 500;
   }
-  const size = Math.floor(window.innerHeight);
-  console.log('Threshold set to:', size);
-  return size;
+  
+  const viewportHeight = window.innerHeight;
+  const totalScrollHeight = 4 * viewportHeight;
+  const availableScroll = totalScrollHeight - viewportHeight;
+  
+  // Start animations after one viewport height
+  const startThreshold = viewportHeight;
+  
+  // Distribute remaining scroll evenly across carousel items
+  const remainingScroll = availableScroll - startThreshold;
+  const stepSize = remainingScroll / CAROUSSEL_IMAGES.length;
+  return stepSize;
 }
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [scrollThreshold, setScrollThreshold] = useState(getScrollThreshold());
+  const [stepSize, setStepSize] = useState(getScrollThreshold());
   
   useEffect(() => {
     const handleResize = () => {
-      setScrollThreshold(getScrollThreshold()); // 10% of viewport height
+      setTimeout(() => setStepSize(getScrollThreshold()), 100);
     };
     window.addEventListener('resize', handleResize, { passive: true });
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       setIsScrolled(scrollPosition > 10);
-
-      if(scrollPosition > scrollThreshold) {
-        const scrollAfterThreshold = scrollPosition - scrollThreshold;
-        const newIndex = Math.min(Math.floor(scrollAfterThreshold / scrollThreshold), CAROUSSEL_IMAGES.length - 1);
+      if(scrollPosition > stepSize) {
+        const scrollPositionAfterStep = scrollPosition - stepSize;
+        const newIndex = Math.min(Math.floor(scrollPositionAfterStep / stepSize), CAROUSSEL_IMAGES.length - 1);
         setActiveIndex(newIndex);
       } else {
         setActiveIndex(-1);
@@ -89,12 +97,12 @@ function App() {
       <div className='grid-container'>
         <nav className='navbar' role='navigation'>
           <div>
-            <button>Home</button>
-            <button>About</button>
+            <a>Home</a>
+            <a>About</a>
           </div>
           <div>
-            <button className='contact'>Email</button>
-            <button className='contact'>Linkedin</button>
+            <a target='_blank' href='https://mail.google.com/mail/?view=cm&fs=1&to=mimbentes@gmail.com' className='contact'>mimbentes@gmail.com</a>
+            <a target='_blank' href="https://www.linkedin.com/in/in%C3%AAs-bentes-697398215/" className='contact'>Linkedin</a>
           </div>
         </nav>
         <div className={`hero-image ${isScrolled ? 'scrolled' : ''}`}>
@@ -104,7 +112,11 @@ function App() {
           {CAROUSSEL_IMAGES.map((image, index) => (
             <div key={image.id} className="carousel-item">
               <img src={image.src} alt={image.alt} />
-              <p className='carousel-item-description'>{image.description}</p>
+              <div className="carousel-item-description">
+                <span>{image.alt}</span>
+                <span>{image.description}</span>
+              </div>
+              
             </div>
           ))}
         </div>
@@ -118,7 +130,7 @@ function App() {
             <span className={`title-span ${isScrolled ? 'scrolled' : ''}`}>work</span>
           </div>
         </div>
-        <p className="hero-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Delectus veniam maiores voluptate dolorum harum? Nam hic ipsam blanditiis impedit doloremque sed, quis earum, ab suscipit quae, minus nemo numquam cumque.</p>
+        <p className="hero-text">Here comes a three or four line description about my work philosophy and my key traits and skills as a product designer.</p>
         <div className="bottom-icon">
           <img src={arrowIcon} alt="down-arrow" />
         </div>
